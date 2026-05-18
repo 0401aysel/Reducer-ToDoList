@@ -1,7 +1,7 @@
 import { useFormContext } from "./contexts/formContext";
 
 export default function TaskList() {
-  const { state } = useFormContext();
+  const { state, dispatch } = useFormContext();
 
   return (
     <>
@@ -12,6 +12,28 @@ export default function TaskList() {
           <div className="tasks">
             {state.tasks.map((task) => (
               <div className="task" key={task.id}>
+                <button
+                  onClick={() => {
+                    dispatch({
+                      type: "CHANGE_STATUS",
+                      payload: task.id,
+                    });
+                  }}
+                  className={`taskStatus ${
+                    task.status ? "completed" : "notCompleted"
+                  }`}
+                ></button>
+                <button
+                  className="removeTask"
+                  onClick={() => {
+                    dispatch({
+                      type: "REMOVE_TASK",
+                      payload: task.id,
+                    });
+                  }}
+                >
+                  X
+                </button>
                 <h2>{task.title}</h2>
 
                 <p>

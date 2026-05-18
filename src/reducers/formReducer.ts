@@ -4,6 +4,7 @@ export interface ITask {
   description: string;
   deadline: boolean;
   date: string;
+  status: boolean;
 }
 
 export interface State {
@@ -21,6 +22,7 @@ export const initialState: State = {
     description: "",
     deadline: false,
     date: "",
+    status: false,
   },
 
   tasks: [],
@@ -34,7 +36,9 @@ export type TAction =
       field: string;
       value: string | boolean;
     }
-  | { type: "ADD_TASK" };
+  | { type: "ADD_TASK" }
+  | { type: "REMOVE_TASK"; payload: number }
+  | { type: "CHANGE_STATUS"; payload: number };
 
 export function formReducer(state: State, action: TAction): State {
   switch (action.type) {
@@ -77,6 +81,25 @@ export function formReducer(state: State, action: TAction): State {
         form: initialState.form,
 
         step: 1,
+      };
+    case "CHANGE_STATUS":
+      return {
+        ...state,
+
+        tasks: state.tasks.map((task) =>
+          task.id === action.payload
+            ? {
+                ...task,
+                status: !task.status,
+              }
+            : task,
+        ),
+      };
+    case "REMOVE_TASK":
+      return {
+        ...state,
+
+        tasks: state.tasks.filter((task) => task.id !== action.payload),
       };
 
     default:
